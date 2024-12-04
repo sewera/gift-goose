@@ -25,8 +25,3 @@ export type Participant = {
   assignedReceiverDesireId?: string
   assignedReceiverWants?: string
 }
-
-export type Desire = {
-  id: string
-  wants: string
-}
