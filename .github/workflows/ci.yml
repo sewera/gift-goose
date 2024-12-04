@@ -1,0 +1,62 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: "lts/gallium"
+
+      - name: Setup Go environment
+        uses: actions/setup-go@v3
+        with:
+          go-version: ">=1.19.0"
+
+      # https://github.com/actions/cache/blob/main/examples.md
+      - name: Get yarn cache directory path for ui
+        id: yarn-cache-dir-path
+        run: echo "dir=$(cd ui; yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+
+      - name: Cache yarn dependencies
+        id: yarn-cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Cache go dependencies
+        id: go-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Install ui dependencies
+        run: make deps-ui
+
+      - name: Install go dependencies
+        if: steps.go-cache.outputs.cache-hit != 'true'
+        run: make deps-go
+
+      - name: Build
+        run: make -j4 build
+
+      - name: Test
+        run: make -j4 test

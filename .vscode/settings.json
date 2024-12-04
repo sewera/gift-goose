@@ -1,0 +1,20 @@
+{
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": true,
+    "strings": true
+  },
+  "typescript.preferences.importModuleSpecifier": "relative",
+
+  // jest
+  "jest.autoRun": { "watch": false, "onSave": "test-src-file" },
+  "jest.jestCommandLine": "yarn test",
+  "jest.rootPath": "ui",
+  "jest.enableCodeLens": false,
+  "jest.debugCodeLens.showWhenTestStateIn": [],
+
+  // formatting
+  "[typescript][typescriptreact][javascript][javascriptreact][jsonc][json][html][yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

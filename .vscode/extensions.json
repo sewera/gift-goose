@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "golang.go",
+    "esbenp.prettier-vscode",
+    "orta.vscode-jest"
+  ],
+  "unwantedRecommendations": []
+}

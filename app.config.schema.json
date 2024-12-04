@@ -1,0 +1,10 @@
+{
+  "$id": "app.config.schema.json",
+  "description": "Configuration for backend host address",
+  "required": ["pbHost"],
+  "properties": {
+    "pbHost": {
+      "type": "string"
+    }
+  }
+}
