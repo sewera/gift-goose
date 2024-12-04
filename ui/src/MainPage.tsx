@@ -1,7 +1,7 @@
-import { Button, createTheme, MantineProvider } from '@mantine/core'
+import { Button, createTheme, MantineProvider, TextInput } from '@mantine/core'
 import { fetchParticipant, updateWants } from './data/fetch'
 import { useStore } from './data/store'
-import { FC, ReactNode, useEffect } from 'react'
+import { FC, ReactNode, useEffect, useState } from 'react'
 
 const participantIdRegex = new RegExp('([0-9]{4})')
 
@@ -26,25 +26,34 @@ export const MainPage = () => {
   }
 
   const participant = useStore(state => state.participant)
-  const desires = useStore(state => state.desires)
   const error = useStore(state => state.error)
 
   const setParticipant = useStore(state => state.setParticipant)
-  const setDesires = useStore(state => state.setDesires)
   const setError = useStore(state => state.setError)
 
   useEffect(() => {
     fetchParticipant(participantId, setParticipant, setError)
   }, [participantId])
+  const [participantWants, setParticipantWants] = useState(participant?.wants ?? '')
 
   if (error) return <Provider>Participant was not found. Error: {JSON.stringify(error)}</Provider>
   return (
     <Provider>
-      <p>Participant: {JSON.stringify(participant)}</p>
-      <p>Desires: {JSON.stringify(desires)}</p>
+      <p>Name: {participant?.name}</p>
+      <p>Wants: {participant?.wants}</p>
+      {participant?.assignedReceiverWants ? (
+        <p>Assigned receiver wants: {participant.assignedReceiverWants}</p>
+      ) : (
+        <p>No assigned receiver</p>
+      )}
+      {participant?.assignedReceiverDesireId ? <p>Put on the gift: {participant.assignedReceiverDesireId}</p> : <></>}
+      <TextInput
+        value={participantWants}
+        onChange={event => setParticipantWants(event.currentTarget.value)}
+      ></TextInput>
       <Button
         onClick={() => {
-          if (participant) updateWants(participant, 'test test', setError)
+          if (participant) updateWants(participant, participantWants, setError)
         }}
       >
         Click me!
