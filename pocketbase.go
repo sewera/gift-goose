@@ -84,14 +84,14 @@ func getHostFromJSONOrReturnDefault() string {
 func (a *App) serveStatic() {
 	staticServePath := "/*"
 	uiDist := "ui/dist"
-	a.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+	a.OnServe().BindFunc(func(serveEvent *core.ServeEvent) error {
 		if err := checkForUIDist(uiDist); err != nil {
 			logWarn("ui/dist: " + err.Error())
-			return nil
+			return serveEvent.Next()
 		}
 		logInfo("ui/dist: serving at " + staticServePath)
-		e.Router.GET(staticServePath, apis.StaticDirectoryHandler(os.DirFS(uiDist), true))
-		return nil
+		serveEvent.Router.GET(staticServePath, apis.Static(os.DirFS(uiDist), true))
+		return serveEvent.Next()
 	})
 }
 

@@ -1,31 +1,25 @@
-import create from 'zustand'
-import { devtools } from 'zustand/middleware'
-import { Note } from '../domain/Note'
-import { deleteFromRecord, recordFromIdArray } from '../util/data/records'
+import { create } from 'zustand'
+import { Desire, DesireData, Participant, ParticipantData } from './dataTypes'
 
 export type State = {
-  notes: Record<string, Note>
-  addOrUpdateNote: (note: Note) => void
-  deleteNote: (note: Note) => void
-  setNotes: (notes: Note[]) => void
-}
+  participant: Participant | null
+  desires: Desire[]
+  error: Error | null
 
-export type SetState = (
-  partial: State | Partial<State> | ((state: State) => State | Partial<State>),
-  replace?: boolean | undefined,
-) => void
+  setParticipant: (participants: Participant) => void
+  setDesires: (desires: Desire[]) => void
+  setError: (error: Error) => void
+}
+export type SetState = (partial: State | Partial<State> | ((state: State) => State | Partial<State>)) => void
+
 const store = (set: SetState): State => ({
-  notes: {},
-  addOrUpdateNote: note => set(prev => ({ notes: { ...prev.notes, [note.id]: note } })),
-  deleteNote: note => set(prev => ({ notes: deleteFromRecord(prev.notes, note) })),
-  setNotes: notes => set({ notes: recordFromIdArray(notes) }),
+  participant: null,
+  desires: [],
+  error: null,
+
+  setParticipant: participant => set({ participant }),
+  setDesires: desires => set({ desires }),
+  setError: error => set({ error }),
 })
 
-const storeWithMiddleware = devtools(store)
-
-export const useStore = create<State>()(storeWithMiddleware)
-
-export type UseStore = typeof useStore
-export type GetState = typeof useStore.getState
-export type Subscribe = typeof useStore.subscribe
-export type Destroy = typeof useStore.destroy
+export const useStore = create<State>()(store)

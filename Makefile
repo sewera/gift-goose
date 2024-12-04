@@ -27,10 +27,8 @@ workspace: print-help-ui print-help-go deps copy-example-config
 print-help-ui:
 ifneq ($(NVM_DIR),"")
 	@echo '> nvm installed, run `nvm install` and `nvm use` in your shell'
-	@echo '> make sure to have yarn installed, run `npm -g i yarn`'
 else ifneq ("$(wildcard $(HOME)/.nvm/nvm.sh)","")
 	@echo '> nvm installed, run `nvm install` and `nvm use` in your shell'
-	@echo '> make sure to have yarn installed, run `npm -g i yarn`'
 else
 $(error nvm not installed, consider installing it or install latest LTS node.js manually)
 endif
@@ -46,7 +44,7 @@ endif
 deps: deps-ui deps-go
 
 deps-ui:
-	@cd ui; yarn
+	@cd ui; npm install
 	@echo "> deps for ui installed"
 
 deps-go:
@@ -72,7 +70,7 @@ pb: $(PB_EXE)
 
 vite: $(UI)/$(CFG)
 	@echo "> starting Vite in dev mode"
-	@cd ui; yarn dev
+	@cd ui; npm run dev
 
 clean-config:
 	@rm -f $(CFG) $(UI)/$(CFG)
@@ -89,11 +87,11 @@ $(PB_EXE): $(PB_SRC)
 	@echo "> $(PB_EXE) built"
 
 ui-build: $(UI)/$(CFG)
-	@cd ui; yarn build
+	@cd ui; npm run build
 	@echo "> $(UI)/$(DIST) built"
 
 test:
-	@cd ui; yarn test
+	@cd ui; npm run test
 
 test-update:
-	@cd ui; yarn test:update
+	@cd ui; npm run test:update

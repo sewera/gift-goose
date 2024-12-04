@@ -1,39 +1,54 @@
-import { Note } from '../domain/Note'
 import Pocketbase from 'pocketbase'
 import { BACKEND_URL } from '../config'
+import { Desire, DesireData, Participant, ParticipantData } from './dataTypes'
 
 const client = new Pocketbase(BACKEND_URL)
 
-export const fetchNotes = (setNotes: (notes: Note[]) => void) => {
+type ErrorHandler = (error: Error) => void
+
+export const fetchDesires = (setDesires: (desires: Desire[]) => void, setError: ErrorHandler) => {
   client
-    .collection('notes')
-    .getList<Note>(1, 30, {
-      expand: 'author.job',
+    .collection('desires')
+    .getFullList<DesireData>({
+      expand: 'participant',
+      fields: '*,expand.participant.name',
     })
-    .then(({ items: notesData }) => {
-      console.log(notesData)
-      setNotes(notesData)
+    .then(desiresData => {
+      const desires: Desire[] = desiresData.map(d => ({ participantName: d.expand.participant.name, wants: d.wants }))
+      setDesires(desires)
     })
+    .catch(error => setError(error))
 }
 
-type Action = 'create' | 'update' | 'delete'
+export const updateWants = (participantId: string, wants: string, setError: ErrorHandler) => {
+  client
+    .collection('desires')
+    .getFirstListItem<DesireData>(`participant = "${participantId}"`)
+    .then(desireData => {
+      desireData.id
+      client.collection('desires').update(
+        desireData.id,
+        { wants },
+        {
+          headers: {
+            'X-Participant-Id': participantId,
+          },
+        },
+      )
+    })
+    .catch(error => setError(error))
+}
 
-export const streamNotes = (
-  addNote: (note: Note) => void,
-  updateNote: (note: Note) => void,
-  deleteNote: (note: Note) => void,
+export const fetchParticipant = (
+  participantId: string,
+  setParticipant: (participant: Participant) => void,
+  setError: ErrorHandler,
 ) => {
-  client.realtime.subscribe('notes', ({ action, record }) => {
-    const note = record as Note
-    switch (action as Action) {
-      case 'create':
-        addNote(note)
-        break
-      case 'update':
-        updateNote(note)
-        break
-      case 'delete':
-        deleteNote(note)
-    }
-  })
+  client
+    .collection('participants')
+    .getOne<ParticipantData>(participantId)
+    .then(participantData => {
+      setParticipant(participantData)
+    })
+    .catch(error => setError(error))
 }
