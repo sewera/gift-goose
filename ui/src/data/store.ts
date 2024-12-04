@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { Desire, DesireData, Participant, ParticipantData } from './dataTypes'
+import { Desire, Participant } from './dataTypes'
 
 export type State = {
   participant: Participant | null
@@ -8,7 +8,7 @@ export type State = {
 
   setParticipant: (participants: Participant) => void
   setDesires: (desires: Desire[]) => void
-  setError: (error: Error) => void
+  setError: (error: Error | null) => void
 }
 export type SetState = (partial: State | Partial<State> | ((state: State) => State | Partial<State>)) => void
 

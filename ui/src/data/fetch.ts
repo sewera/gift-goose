@@ -1,40 +1,25 @@
 import Pocketbase from 'pocketbase'
 import { BACKEND_URL } from '../config'
-import { Desire, DesireData, Participant, ParticipantData } from './dataTypes'
+import { Participant, ParticipantData } from './dataTypes'
 
 const client = new Pocketbase(BACKEND_URL)
 
-type ErrorHandler = (error: Error) => void
+type ErrorHandler = (error: Error | null) => void
 
-export const fetchDesires = (setDesires: (desires: Desire[]) => void, setError: ErrorHandler) => {
+export const updateWants = (participant: Participant, wants: string, setError: ErrorHandler) => {
   client
     .collection('desires')
-    .getFullList<DesireData>({
-      expand: 'participant',
-      fields: '*,expand.participant.name',
-    })
-    .then(desiresData => {
-      const desires: Desire[] = desiresData.map(d => ({ participantName: d.expand.participant.name, wants: d.wants }))
-      setDesires(desires)
-    })
-    .catch(error => setError(error))
-}
-
-export const updateWants = (participantId: string, wants: string, setError: ErrorHandler) => {
-  client
-    .collection('desires')
-    .getFirstListItem<DesireData>(`participant = "${participantId}"`)
-    .then(desireData => {
-      desireData.id
-      client.collection('desires').update(
-        desireData.id,
-        { wants },
-        {
-          headers: {
-            'X-Participant-Id': participantId,
-          },
+    .update(
+      participant.desireId,
+      { wants },
+      {
+        headers: {
+          'X-Participant-Id': participant.id,
         },
-      )
+      },
+    )
+    .then(() => {
+      setError(null)
     })
     .catch(error => setError(error))
 }
@@ -46,9 +31,26 @@ export const fetchParticipant = (
 ) => {
   client
     .collection('participants')
-    .getOne<ParticipantData>(participantId)
-    .then(participantData => {
-      setParticipant(participantData)
+    .getOne<ParticipantData>(participantId, {
+      expand: 'desire,assignedReceiver,assignedReceiver.desire',
+    })
+    .then(
+      (participantData): Participant => ({
+        id: participantData.id,
+        name: participantData.name,
+        desireId: participantData.desire,
+        wants: participantData.expand.desire.wants,
+        assignedReceiverDesireId: participantData.expand.assignedReceiver?.expand.desire.id,
+        assignedReceiverWants: participantData.expand.assignedReceiver?.expand.desire.wants,
+      }),
+    )
+    .then(participant => {
+      console.log(`participant: ${JSON.stringify(participant)}`)
+      return participant
+    })
+    .then(participant => {
+      setParticipant(participant)
+      setError(null)
     })
     .catch(error => setError(error))
 }

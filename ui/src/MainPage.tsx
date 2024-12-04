@@ -1,7 +1,7 @@
 import { Button, createTheme, MantineProvider } from '@mantine/core'
-import { fetchDesires, fetchParticipant, updateWants } from './data/fetch'
+import { fetchParticipant, updateWants } from './data/fetch'
 import { useStore } from './data/store'
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, useEffect } from 'react'
 
 const participantIdRegex = new RegExp('([0-9]{4})')
 
@@ -33,15 +33,22 @@ export const MainPage = () => {
   const setDesires = useStore(state => state.setDesires)
   const setError = useStore(state => state.setError)
 
-  fetchDesires(setDesires, setError)
-  fetchParticipant(participantId, setParticipant, setError)
+  useEffect(() => {
+    fetchParticipant(participantId, setParticipant, setError)
+  }, [participantId])
 
-  if (error) return <Provider>Participant was not found</Provider>
+  if (error) return <Provider>Participant was not found. Error: {JSON.stringify(error)}</Provider>
   return (
     <Provider>
-      <p>Participant: ${JSON.stringify(participant)}</p>
-      <p>Desires: ${JSON.stringify(desires)}</p>
-      <Button onClick={() => updateWants(participantId, 'test', setError)}>Click me!</Button>
+      <p>Participant: {JSON.stringify(participant)}</p>
+      <p>Desires: {JSON.stringify(desires)}</p>
+      <Button
+        onClick={() => {
+          if (participant) updateWants(participant, 'test test', setError)
+        }}
+      >
+        Click me!
+      </Button>
     </Provider>
   )
 }

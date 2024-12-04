@@ -1,27 +1,32 @@
+type DesireData = {
+  id: string
+  wants: string
+}
+
 export type ParticipantData = {
   id: string
   name: string
-  assignedReceiver: string
-  giver: boolean
-}
-
-export type Participant = {
-  name: string
-  assignedReceiver: string
-}
-
-export type DesireData = {
-  id: string
-  participant: string
-  wants: string
+  desire: string
   expand: {
-    participant: {
-      name: string
+    desire: DesireData
+    assignedReceiver?: {
+      expand: {
+        desire: DesireData
+      }
     }
   }
 }
 
+export type Participant = {
+  id: string
+  name: string
+  desireId: string
+  wants: string
+  assignedReceiverDesireId?: string
+  assignedReceiverWants?: string
+}
+
 export type Desire = {
-  participantName: string
+  id: string
   wants: string
 }
