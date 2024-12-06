@@ -1,7 +1,19 @@
-import { Badge, Button, Card, Container, createTheme, Group, MantineProvider, Text, TextInput } from '@mantine/core'
+import {
+  Badge,
+  Button,
+  Card,
+  Center,
+  Container,
+  createTheme,
+  Group,
+  Loader,
+  MantineProvider,
+  Text,
+  TextInput,
+} from '@mantine/core'
 import { fetchParticipant, updateWants } from './data/fetch'
-import { useStore } from './data/store'
 import { FC, ReactNode, useEffect, useState } from 'react'
+import { Participant } from './data/dataTypes'
 
 const participantIdRegex = new RegExp('([0-9]{4})')
 
@@ -25,21 +37,42 @@ export const MainPage = () => {
     return <Provider>Error: participantId is required</Provider>
   }
 
-  const participant = useStore(state => state.participant)
-  const error = useStore(state => state.error)
-
-  const setParticipant = useStore(state => state.setParticipant)
-  const setError = useStore(state => state.setError)
+  const [loading, setLoading] = useState(true)
+  const [participant, setParticipant] = useState<Participant | null>(null)
+  const [participantWants, setParticipantWants] = useState('')
 
   const [editMode, setEditMode] = useState(false)
-  const [participantWants, setParticipantWants] = useState(participant?.wants ?? '')
+
+  const [fetchError, setFetchError] = useState(false)
+  const [updateError, setUpdateError] = useState(false)
 
   useEffect(() => {
-    fetchParticipant(participantId, setParticipant, setError)
+    fetchParticipant(participantId).then(p => {
+      setLoading(false)
+      if (p instanceof Error) {
+        setFetchError(true)
+      } else if (p) {
+        setFetchError(false)
+        setParticipant(p)
+        setParticipantWants(p.wants)
+      }
+    })
   }, [participantId])
 
-  if (error || !participant) {
-    return <Provider>Participant was not found. Error: {JSON.stringify(error)}</Provider>
+  if (fetchError) {
+    return <Provider>Participant was not found.</Provider>
+  }
+
+  if (loading || !participant) {
+    return (
+      <Provider>
+        <Container size="sm">
+          <Center>
+            <Loader />
+          </Center>
+        </Container>
+      </Provider>
+    )
   }
 
   return (
@@ -49,12 +82,20 @@ export const MainPage = () => {
           <Group justify="space-between" my="md">
             <Text fw="bold">{participant.name}</Text>
             <Group>
-              <Badge size="sm" color="red">
-                set your wish
-              </Badge>
-              <Badge size="sm" color="yellow">
-                not assigned
-              </Badge>
+              {participant.wants || participantWants ? (
+                <></>
+              ) : (
+                <Badge size="sm" color="red">
+                  set your wish
+                </Badge>
+              )}
+              {participant.assignedReceiverDesireId ? (
+                <></>
+              ) : (
+                <Badge size="sm" color="yellow">
+                  not assigned
+                </Badge>
+              )}
             </Group>
           </Group>
 
@@ -70,7 +111,7 @@ export const MainPage = () => {
             {editMode ? (
               <Button
                 onClick={() => {
-                  updateWants(participant, participantWants, setError)
+                  updateWants(participant, participantWants, setUpdateError)
                   setEditMode(false)
                 }}
               >
@@ -80,6 +121,7 @@ export const MainPage = () => {
               <Button onClick={() => setEditMode(true)}>Edit</Button>
             )}
           </Group>
+          {updateError && <Text>There is a problem with updating your gift preference. Please try again.</Text>}
         </Card>
 
         <Card shadow="sm" padding="md" radius="md">
