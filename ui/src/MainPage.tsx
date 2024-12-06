@@ -1,4 +1,4 @@
-import { Button, createTheme, MantineProvider, TextInput } from '@mantine/core'
+import { Badge, Button, Card, Container, createTheme, Group, MantineProvider, Text, TextInput } from '@mantine/core'
 import { fetchParticipant, updateWants } from './data/fetch'
 import { useStore } from './data/store'
 import { FC, ReactNode, useEffect, useState } from 'react'
@@ -31,33 +31,73 @@ export const MainPage = () => {
   const setParticipant = useStore(state => state.setParticipant)
   const setError = useStore(state => state.setError)
 
+  const [editMode, setEditMode] = useState(false)
+  const [participantWants, setParticipantWants] = useState(participant?.wants ?? '')
+
   useEffect(() => {
     fetchParticipant(participantId, setParticipant, setError)
   }, [participantId])
-  const [participantWants, setParticipantWants] = useState(participant?.wants ?? '')
 
-  if (error) return <Provider>Participant was not found. Error: {JSON.stringify(error)}</Provider>
+  if (error || !participant) {
+    return <Provider>Participant was not found. Error: {JSON.stringify(error)}</Provider>
+  }
+
   return (
     <Provider>
-      <p>Name: {participant?.name}</p>
-      <p>Wants: {participant?.wants}</p>
-      {participant?.assignedReceiverWants ? (
-        <p>Assigned receiver wants: {participant.assignedReceiverWants}</p>
-      ) : (
-        <p>No assigned receiver</p>
-      )}
-      {participant?.assignedReceiverDesireId ? <p>Put on the gift: {participant.assignedReceiverDesireId}</p> : <></>}
-      <TextInput
-        value={participantWants}
-        onChange={event => setParticipantWants(event.currentTarget.value)}
-      ></TextInput>
-      <Button
-        onClick={() => {
-          if (participant) updateWants(participant, participantWants, setError)
-        }}
-      >
-        Click me!
-      </Button>
+      <Container size="sm">
+        <Card shadow="sm" padding="md" radius="md">
+          <Group justify="space-between" my="md">
+            <Text fw="bold">{participant.name}</Text>
+            <Group>
+              <Badge size="sm" color="red">
+                set your wish
+              </Badge>
+              <Badge size="sm" color="yellow">
+                not assigned
+              </Badge>
+            </Group>
+          </Group>
+
+          {editMode ? (
+            <TextInput
+              value={participantWants}
+              onChange={event => setParticipantWants(event.currentTarget.value)}
+            ></TextInput>
+          ) : (
+            <Text>{participantWants ?? participant.wants}</Text>
+          )}
+          <Group justify="space-between">
+            {editMode ? (
+              <Button
+                onClick={() => {
+                  updateWants(participant, participantWants, setError)
+                  setEditMode(false)
+                }}
+              >
+                Set
+              </Button>
+            ) : (
+              <Button onClick={() => setEditMode(true)}>Edit</Button>
+            )}
+          </Group>
+        </Card>
+
+        <Card shadow="sm" padding="md" radius="md">
+          {participant.assignedReceiverDesireId && participant.assignedReceiverWants ? (
+            <>
+              <Text fw="bold">Assigned receiver</Text>
+              <Text>{participant.assignedReceiverWants}</Text>
+              <Text>
+                Put on the gift: <b>{participant.assignedReceiverDesireId}</b>
+              </Text>
+            </>
+          ) : (
+            <>
+              <Text fw="bold">No assigned receiver</Text>
+            </>
+          )}
+        </Card>
+      </Container>
     </Provider>
   )
 }
