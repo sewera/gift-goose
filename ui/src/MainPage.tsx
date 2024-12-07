@@ -1,17 +1,5 @@
-import { FC, ReactNode, useEffect, useState } from 'react'
-import {
-  Badge,
-  Button,
-  Card,
-  Center,
-  Container,
-  createTheme,
-  Group,
-  Loader,
-  MantineProvider,
-  Text,
-  TextInput,
-} from '@mantine/core'
+import { useEffect, useState } from 'react'
+import { Badge, Button, Card, Center, Container, Group, Loader, Text, TextInput } from '@mantine/core'
 import { fetchParticipant, updateWants } from './data/fetch'
 import { Participant } from './data/dataTypes'
 import { translate } from './intl/translate'
@@ -23,19 +11,10 @@ function getParticipantId() {
   return matches ? matches[1] : undefined
 }
 
-interface ProviderProps {
-  children: ReactNode
-}
-
-const Provider: FC<ProviderProps> = ({ children }) => {
-  const theme = createTheme({})
-  return <MantineProvider theme={theme}>{children}</MantineProvider>
-}
-
 export const MainPage = () => {
   const participantId = getParticipantId()
   if (!participantId) {
-    return <Provider>{translate('Error: participantId is required')}</Provider>
+    return <>{translate('Error: participantId is required')}</>
   }
 
   const [loading, setLoading] = useState(true)
@@ -61,23 +40,23 @@ export const MainPage = () => {
   }, [participantId])
 
   if (fetchError) {
-    return <Provider>{translate('Participant was not found')}</Provider>
+    return <>{translate('Participant was not found')}</>
   }
 
   if (loading || !participant) {
     return (
-      <Provider>
+      <>
         <Container size="sm">
           <Center>
             <Loader />
           </Center>
         </Container>
-      </Provider>
+      </>
     )
   }
 
   return (
-    <Provider>
+    <>
       <Container size="sm">
         <Card shadow="sm" padding="md" radius="md">
           <Group justify="space-between" my="md">
@@ -143,6 +122,6 @@ export const MainPage = () => {
           )}
         </Card>
       </Container>
-    </Provider>
+    </>
   )
 }
