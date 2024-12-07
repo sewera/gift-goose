@@ -8,10 +8,10 @@ export type ParticipantData = {
   name: string
   desire: string
   expand: {
-    desire: DesireData
+    desire?: DesireData
     assignedReceiver?: {
       expand: {
-        desire: DesireData
+        desire?: DesireData
       }
     }
   }

@@ -11,13 +11,16 @@ export async function fetchParticipant(participantId: string) {
     const participantData = await client.collection('participants').getOne<ParticipantData>(participantId, {
       expand: 'desire,assignedReceiver,assignedReceiver.desire',
     })
+    if (!participantData.expand.desire) {
+      console.warn('participantData does not have a desire assigned')
+    }
     return {
       id: participantData.id,
       name: participantData.name,
       desireId: participantData.desire,
-      wants: participantData.expand.desire.wants,
-      assignedReceiverDesireId: participantData.expand.assignedReceiver?.expand.desire.id,
-      assignedReceiverWants: participantData.expand.assignedReceiver?.expand.desire.wants,
+      wants: participantData.expand.desire?.wants ?? '',
+      assignedReceiverDesireId: participantData.expand.assignedReceiver?.expand.desire?.id,
+      assignedReceiverWants: participantData.expand.assignedReceiver?.expand.desire?.wants,
     }
   } catch (e) {
     const error = <ClientResponseError>e
