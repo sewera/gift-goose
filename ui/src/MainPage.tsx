@@ -1,3 +1,4 @@
+import { FC, ReactNode, useEffect, useState } from 'react'
 import {
   Badge,
   Button,
@@ -12,8 +13,8 @@ import {
   TextInput,
 } from '@mantine/core'
 import { fetchParticipant, updateWants } from './data/fetch'
-import { FC, ReactNode, useEffect, useState } from 'react'
 import { Participant } from './data/dataTypes'
+import { translate } from './intl/translate'
 
 const participantIdRegex = new RegExp('([0-9]{4})')
 
@@ -34,7 +35,7 @@ const Provider: FC<ProviderProps> = ({ children }) => {
 export const MainPage = () => {
   const participantId = getParticipantId()
   if (!participantId) {
-    return <Provider>Error: participantId is required</Provider>
+    return <Provider>{translate('Error: participantId is required')}</Provider>
   }
 
   const [loading, setLoading] = useState(true)
@@ -60,7 +61,7 @@ export const MainPage = () => {
   }, [participantId])
 
   if (fetchError) {
-    return <Provider>Participant was not found.</Provider>
+    return <Provider>{translate('Participant was not found')}</Provider>
   }
 
   if (loading || !participant) {
@@ -86,14 +87,14 @@ export const MainPage = () => {
                 <></>
               ) : (
                 <Badge size="sm" color="red">
-                  set your wish
+                  {translate('set your wish')}
                 </Badge>
               )}
               {participant.assignedReceiverDesireId ? (
                 <></>
               ) : (
                 <Badge size="sm" color="yellow">
-                  not assigned
+                  {translate('not assigned')}
                 </Badge>
               )}
             </Group>
@@ -115,27 +116,29 @@ export const MainPage = () => {
                   setEditMode(false)
                 }}
               >
-                Set
+                {translate('Set')}
               </Button>
             ) : (
-              <Button onClick={() => setEditMode(true)}>Edit</Button>
+              <Button onClick={() => setEditMode(true)}>{translate('Edit')}</Button>
             )}
           </Group>
-          {updateError && <Text>There is a problem with updating your gift preference. Please try again.</Text>}
+          {updateError && (
+            <Text>{translate('There is a problem with updating your gift preference. Please try again')}</Text>
+          )}
         </Card>
 
         <Card shadow="sm" padding="md" radius="md">
           {participant.assignedReceiverDesireId && participant.assignedReceiverWants ? (
             <>
-              <Text fw="bold">Assigned receiver</Text>
+              <Text fw="bold">{translate('Assigned receiver')}</Text>
               <Text>{participant.assignedReceiverWants}</Text>
               <Text>
-                Put on the gift: <b>{participant.assignedReceiverDesireId}</b>
+                {translate('Put on the gift:')} <b>{participant.assignedReceiverDesireId}</b>
               </Text>
             </>
           ) : (
             <>
-              <Text fw="bold">No assigned receiver</Text>
+              <Text fw="bold">{translate('No assigned receiver')}</Text>
             </>
           )}
         </Card>

@@ -1,10 +1,14 @@
 {
   "$id": "app.config.schema.json",
-  "description": "Configuration for backend host address",
-  "required": ["pbHost"],
+  "description": "App configuration",
+  "required": ["pbHost", "language"],
   "properties": {
     "pbHost": {
       "type": "string"
+    },
+    "language": {
+      "type": "string",
+      "enum": ["en", "pl"]
     }
   }
 }

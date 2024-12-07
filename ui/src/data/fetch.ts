@@ -4,8 +4,6 @@ import { Participant, ParticipantData } from './dataTypes'
 
 const client = new Pocketbase(BACKEND_URL)
 
-type ErrorHandler = (error: Error | null) => void
-
 export async function fetchParticipant(participantId: string) {
   try {
     const participantData = await client.collection('participants').getOne<ParticipantData>(participantId, {
