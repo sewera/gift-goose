@@ -1,6 +1,6 @@
 import Pocketbase, { ClientResponseError } from 'pocketbase'
 import { BACKEND_URL } from '../config'
-import { Participant, ParticipantData } from './dataTypes'
+import { AdminParticipantData, Participant, ParticipantData } from './datatypes'
 
 const client = new Pocketbase(BACKEND_URL)
 
@@ -21,15 +21,7 @@ export async function fetchParticipant(participantId: string) {
       assignedReceiverWants: participantData.expand.assignedReceiver?.expand.desire?.wants,
     }
   } catch (e) {
-    const error = <ClientResponseError>e
-    if (error.status === 404) {
-      return Error('not found')
-    } else if (error.isAbort) {
-      return null
-    } else {
-      console.log(`error: ${JSON.stringify(error)}`)
-      return null
-    }
+    return handleError(e)
   }
 }
 
@@ -49,4 +41,54 @@ export function updateWants(participant: Participant, wants: string, setError: (
       setError(false)
     })
     .catch(() => setError(true))
+}
+
+export async function adminFetchParticipants(adminParticipantId: string, adminKey: string) {
+  try {
+    return client.collection('participants').getFullList<AdminParticipantData>({
+      headers: {
+        'X-Participant-Id': adminParticipantId,
+        'X-Admin-Key': adminKey,
+      },
+    })
+  } catch (e) {
+    return handleError(e)
+  }
+}
+
+export function adminUpdateAssignedReceiver(
+  adminParticipantId: string,
+  adminKey: string,
+  participantId: string,
+  assignedReceiverParticipantId: string,
+  setError: (isError: boolean) => void,
+) {
+  client
+    .collection('participants')
+    .update(
+      participantId,
+      { assignedReceiver: assignedReceiverParticipantId },
+      {
+        headers: {
+          'X-Participant-Id': adminParticipantId,
+          'X-Admin-Key': adminKey,
+        },
+      },
+    )
+    .then(() => {
+      setError(false)
+    })
+    .catch(() => setError(true))
+}
+
+function handleError(e: any) {
+  const error = <ClientResponseError>e
+  if (error.status === 404) {
+    return Error('not found')
+  } else if (error.isAbort) {
+    return null
+  } else {
+    console.log(`error: ${JSON.stringify(error)}`)
+    return null
+  }
 }

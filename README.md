@@ -161,7 +161,7 @@ See also `make copy-example-config` recipe.
 - [React Router documentation](https://reactrouter.com/en/main), especially:
   - [Link component](https://reactrouter.com/en/main/components/link),
   - [Browser router](https://reactrouter.com/en/main/routers/create-browser-router) — tl;dr:
-    Add new paths to [main.tsx](./ui/src/main.tsx);
+    Add new paths to [Root.tsx](./ui/src/Root.tsx);
 - [Zustand (store) documentation](https://docs.pmnd.rs/zustand);
 - [Jest documentation](https://jestjs.io/docs), especially:
   - [Getting started](https://jestjs.io/docs/getting-started),

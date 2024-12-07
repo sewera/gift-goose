@@ -25,3 +25,11 @@ export type Participant = {
   assignedReceiverDesireId?: string
   assignedReceiverWants?: string
 }
+
+export type AdminParticipantData = {
+  id: string
+  name: string
+  assignedReceiver?: string
+  desire?: string
+  exclude: boolean
+}

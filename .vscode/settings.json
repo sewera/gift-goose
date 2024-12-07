@@ -8,7 +8,7 @@
 
   // jest
   "jest.autoRun": { "watch": false, "onSave": "test-src-file" },
-  "jest.jestCommandLine": "yarn test",
+  "jest.jestCommandLine": "npm test",
   "jest.rootPath": "ui",
   "jest.enableCodeLens": false,
   "jest.debugCodeLens.showWhenTestStateIn": [],

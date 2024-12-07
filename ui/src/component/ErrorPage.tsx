@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { Box } from '@mantine/core'
-import { translate } from './intl/translate'
+import { translate } from '../intl/translate'
 
 interface ErrorPageProps {
   error: string

@@ -13,6 +13,14 @@ const translations: Record<string, Record<string, string>> = {
     'Assigned receiver': 'Przydzielona osoba',
     'Put on the gift:': 'Umieść na prezencie',
     'No assigned receiver': 'Nie przydzielono odbiorcy',
+    'Could not fetch participants. Check if the key is correct':
+      'Błąd przy pobieraniu listy uczestników. Sprawdź czy klucz (key) jest poprawny',
+    ID: 'Identyfikator',
+    Name: 'Imię',
+    'Desire ID (Gift ID)': 'Identyfikator preferencji (prezentu)',
+    Excluded: 'Pominięty',
+    none: 'brak',
+    'Shuffle receivers': 'Przetasuj odbiorców',
   },
 }
 
