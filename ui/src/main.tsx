@@ -1,7 +1,7 @@
 import React, { FC, ReactNode } from 'react'
 import ReactDOM from 'react-dom/client'
 import '@mantine/core/styles.css'
-import { MainPage } from './MainPage'
+import { Page } from './page'
 import { createTheme, MantineProvider } from '@mantine/core'
 
 const Provider: FC<{ children: ReactNode }> = ({ children }) => {
@@ -12,7 +12,7 @@ const Provider: FC<{ children: ReactNode }> = ({ children }) => {
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Provider>
-      <MainPage />
+      <Page />
     </Provider>
   </React.StrictMode>,
 )

@@ -21,5 +21,5 @@ export function translate(str: string): string {
     return str
   }
 
-  return translations[LANGUAGE][str]
+  return translations[LANGUAGE][str] ?? str
 }

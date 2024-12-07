@@ -3,6 +3,7 @@ import { Badge, Button, Card, Center, Container, Group, Loader, Text, TextInput 
 import { fetchParticipant, updateWants } from './data/fetch'
 import { Participant } from './data/dataTypes'
 import { translate } from './intl/translate'
+import { ErrorPage } from './errorPage'
 
 const participantIdRegex = new RegExp('([0-9]{4})')
 
@@ -11,10 +12,10 @@ function getParticipantId() {
   return matches ? matches[1] : undefined
 }
 
-export const MainPage = () => {
+export const Page = () => {
   const participantId = getParticipantId()
   if (!participantId) {
-    return <>{translate('Error: participantId is required')}</>
+    return <ErrorPage error="Error: participantId is required" />
   }
 
   const [loading, setLoading] = useState(true)
@@ -40,7 +41,7 @@ export const MainPage = () => {
   }, [participantId])
 
   if (fetchError) {
-    return <>{translate('Participant was not found')}</>
+    return <ErrorPage error="Participant was not found" />
   }
 
   if (loading || !participant) {
