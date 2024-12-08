@@ -2,18 +2,26 @@ import { AdminParticipantData } from './datatypes'
 
 export function shuffleReceivers(participants: AdminParticipantData[]) {
   for (let i = 0; i < 100; i++) {
-    const included = structuredClone(participants).filter(participant => !participant.exclude)
-    const excluded = structuredClone(participants).filter(participant => participant.exclude)
+    const target = included(participants)
+    const excludedParticipants = excluded(participants)
 
-    const shuffled = shuffleArray(included)
-    const valid = assign(included, shuffled)
+    const shuffled = shuffleArray(target)
+    const valid = assign(target, shuffled)
     if (valid) {
-      return [...included, ...excluded]
+      return [...target, ...excludedParticipants]
     }
   }
 
   console.warn('Could not properly shuffle and assign receivers')
   return participants
+}
+
+export function included(participants: AdminParticipantData[]) {
+  return structuredClone(participants).filter(participant => !participant.exclude)
+}
+
+function excluded(participants: AdminParticipantData[]) {
+  return structuredClone(participants).filter(participant => participant.exclude)
 }
 
 function assign(target: AdminParticipantData[], shuffled: AdminParticipantData[]) {
