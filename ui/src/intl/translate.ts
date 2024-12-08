@@ -23,6 +23,9 @@ const translations: Record<string, Record<string, string>> = {
     'Shuffle receivers': 'Przetasuj odbiorców',
     'Clear receivers': 'Wyczyść odbiorców',
     'There is a problem with updating receivers': 'Wystąpił problem z ustawieniem odbiorców',
+    show: 'pokaż',
+    hide: 'ukryj',
+    hidden: 'ukryty',
   },
 }
 

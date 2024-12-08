@@ -13,6 +13,8 @@ export const AdminPage = () => {
   const [participants, setParticipants] = useState<AdminParticipantData[]>([])
   const [fetchError, setFetchError] = useState(false)
   const [updateError, setUpdateError] = useState(false)
+  const [hidden, setHidden] = useState(true)
+  const toggleHidden = () => setHidden(!hidden)
 
   const adminParticipantId = useMemo(participantIdFromURL, [location.pathname])!
   const adminKey = useMemo(adminKeyFromURL, [location.pathname])!
@@ -70,12 +72,21 @@ export const AdminPage = () => {
     fetchParticipants()
   }, [pendingUpdates])
 
+  if (loading) {
+    return <LoadingPage />
+  }
+
   if (fetchError || participants.length === 0) {
     return <ErrorPage error="Could not fetch participants. Check if the key is correct" />
   }
 
-  if (loading) {
-    return <LoadingPage />
+  const displayAssignedReceiver = (assignedReceiver: string | undefined) => {
+    if (!assignedReceiver) {
+      return translate('none')
+    } else {
+      const found = participants.find(participant => participant.id === assignedReceiver)!
+      return hidden ? translate('hidden') : found.name
+    }
   }
 
   const rows = participants.map(participant => (
@@ -85,7 +96,7 @@ export const AdminPage = () => {
       </Table.Td>
       <Table.Td>{participant.name}</Table.Td>
       <Table.Td>{participant.desire}</Table.Td>
-      <Table.Td>{participant.assignedReceiver || translate('none')}</Table.Td>
+      <Table.Td>{displayAssignedReceiver(participant.assignedReceiver)}</Table.Td>
       <Table.Td>{participant.exclude ? '✓' : '✕'}</Table.Td>
     </Table.Tr>
   ))
@@ -98,7 +109,12 @@ export const AdminPage = () => {
             <Table.Td>{translate('ID')}</Table.Td>
             <Table.Td>{translate('Name')}</Table.Td>
             <Table.Td>{translate('Desire ID (Gift ID)')}</Table.Td>
-            <Table.Td>{translate('Assigned receiver')}</Table.Td>
+            <Table.Td>
+              {translate('Assigned receiver')}
+              <Button size="compact-xs" onClick={toggleHidden}>
+                {hidden ? translate('show') : translate('hide')}
+              </Button>
+            </Table.Td>
             <Table.Td>{translate('Excluded')}</Table.Td>
           </Table.Tr>
         </Table.Thead>
