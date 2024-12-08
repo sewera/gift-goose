@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Container } from '@mantine/core'
 import { fetchParticipant } from './data/backendClient'
 import { Participant } from './data/datatypes'
 import { ErrorPage } from './component/ErrorPage'
-import { ParticipantCard } from './component/ParticipantCard'
-import { ReceiverCard } from './component/ReceiverCard'
 import { LoadingPage } from './component/LoadingPage'
 import { AdminPage } from './component/AdminPage'
 import { isAdmin, participantIdFromURL } from './data/session'
+import { ParticipantPage } from './component/ParticipantPage'
 
 export const Page = () => {
   const participantId = participantIdFromURL()
@@ -43,13 +41,5 @@ export const Page = () => {
     return <LoadingPage />
   }
 
-  return (
-    <Container size="sm">
-      <ParticipantCard participant={participant} />
-      <ReceiverCard
-        assignedReceiverDesireId={participant.assignedReceiverDesireId}
-        assignedReceiverWants={participant.assignedReceiverWants}
-      />
-    </Container>
-  )
+  return <ParticipantPage participant={participant} />
 }

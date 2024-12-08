@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Card, Text } from '@mantine/core'
+import { Card, Text, Title } from '@mantine/core'
 import { translate } from '../intl/translate'
 
 interface ReceiverCardProps {
@@ -8,21 +8,31 @@ interface ReceiverCardProps {
 }
 
 export const ReceiverCard: FC<ReceiverCardProps> = ({ assignedReceiverDesireId, assignedReceiverWants }) => {
+  const renderContent = () => {
+    if (!assignedReceiverDesireId) {
+      return <Text fw="bold">{translate('No assigned receiver')}</Text>
+    } else if (!assignedReceiverWants) {
+      return <Text fw="bold">{translate('The receiver did not set their desired gift')}</Text>
+    }
+    return (
+      <>
+        <Text>{translate('Prepare the following gift:')}</Text>
+        <Text fw="bold" my="sm">
+          {assignedReceiverWants}
+        </Text>
+        <Text>
+          {translate('Put the following ID on the gift:')} <b>{assignedReceiverDesireId}</b>
+        </Text>
+      </>
+    )
+  }
+
   return (
     <Card shadow="sm" padding="md" radius="md">
-      {assignedReceiverDesireId && assignedReceiverWants ? (
-        <>
-          <Text fw="bold">{translate('Assigned receiver')}</Text>
-          <Text>{assignedReceiverWants}</Text>
-          <Text>
-            {translate('Put on the gift:')} <b>{assignedReceiverDesireId}</b>
-          </Text>
-        </>
-      ) : (
-        <>
-          <Text fw="bold">{translate('No assigned receiver')}</Text>
-        </>
-      )}
+      <Title mb="md" size="h2">
+        {translate('Your mysterious gift receiver')}
+      </Title>
+      {renderContent()}
     </Card>
   )
 }

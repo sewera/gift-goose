@@ -10,8 +10,8 @@ const translations: Record<string, Record<string, string>> = {
     Edit: 'Edytuj',
     'There is a problem with updating your gift preference. Please try again':
       'Wystąpił problem z ustawieniem preferencji prezentu. Spróbuj ponownie',
-    'Assigned receiver': 'Przydzielona osoba',
-    'Put on the gift:': 'Umieść na prezencie',
+    'Prepare the following gift:': 'Przygotuj na prezent:',
+    'Put the following ID on the gift:': 'Umieść na prezencie następujące oznaczenie:',
     'No assigned receiver': 'Nie przydzielono odbiorcy',
     'Could not fetch participants. Check if the key is correct':
       'Błąd przy pobieraniu listy uczestników. Sprawdź czy klucz (key) jest poprawny',
@@ -26,6 +26,10 @@ const translations: Record<string, Record<string, string>> = {
     show: 'pokaż',
     hide: 'ukryj',
     hidden: 'ukryty',
+    Error: 'Błąd',
+    'The receiver did not set their desired gift': 'Odbiorca nie ustawił preferencji prezentu',
+    'Your gift preference:': 'Twoja preferencja prezentu:',
+    'Your mysterious gift receiver': 'Twój tajemniczy odbiorca prezentu',
   },
 }
 

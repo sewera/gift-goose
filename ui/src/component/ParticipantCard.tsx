@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import { Badge, Button, Card, Group, Text, TextInput } from '@mantine/core'
+import { Badge, Button, Card, Group, Text, TextInput, Title } from '@mantine/core'
 import { translate } from '../intl/translate'
 import { updateWants } from '../data/backendClient'
 import { Participant } from '../data/datatypes'
@@ -15,13 +15,18 @@ export const ParticipantCard: FC<ParticipantCardProps> = ({ participant }) => {
 
   useEffect(() => {
     setParticipantWants(participant.wants)
+    if (!participant.wants) {
+      setEditMode(true)
+    }
   }, [participant.wants])
 
   return (
-    <Card shadow="sm" padding="md" radius="md">
-      <Group justify="space-between" my="md">
-        <Text fw="bold">{participant.name}</Text>
-        <Group>
+    <Card shadow="sm" padding="md" radius="md" mb="lg">
+      <Group justify="space-between" mb="md">
+        <Title fw="bold" my="auto" size="h2">
+          {participant.name}
+        </Title>
+        <Group my="auto">
           {participant.wants || participantWants ? (
             <></>
           ) : (
@@ -39,15 +44,16 @@ export const ParticipantCard: FC<ParticipantCardProps> = ({ participant }) => {
         </Group>
       </Group>
 
+      <Text mb="sm">{translate('Your gift preference:')}</Text>
       {editMode ? (
         <TextInput
           value={participantWants}
           onChange={event => setParticipantWants(event.currentTarget.value)}
         ></TextInput>
       ) : (
-        <Text>{participantWants ?? participant.wants}</Text>
+        <Text fw="bold">{(participantWants ?? participant.wants) || translate('none')}</Text>
       )}
-      <Group justify="space-between">
+      <Group justify="space-between" mt="sm">
         {editMode ? (
           <Button
             onClick={() => {
