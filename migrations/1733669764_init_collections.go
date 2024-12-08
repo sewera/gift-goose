@@ -34,9 +34,9 @@ func init() {
 		participantsCollection, _ := app.FindCollectionByNameOrId("participants")
 		if participantsCollection == nil {
 			participantsCollection = core.NewBaseCollection("participants")
-			participantsCollection.ListRule = types.Pointer(`@request.headers.x_participant_id = "0000" && @request.headers.x_admin_key = "2137"`)
+			participantsCollection.ListRule = types.Pointer(`@request.headers.x_participant_id = "0000" && @request.headers.x_admin_key = "8402"`)
 			participantsCollection.ViewRule = types.Pointer("")
-			participantsCollection.UpdateRule = types.Pointer(`@request.headers.x_participant_id = "0000" && @request.headers.x_admin_key = "2137"`)
+			participantsCollection.UpdateRule = types.Pointer(`@request.headers.x_participant_id = "0000" && @request.headers.x_admin_key = "8402"`)
 
 			id := participantsCollection.Fields.GetByName("id").(*core.TextField)
 			id.AutogeneratePattern = "[0-9]{4}"

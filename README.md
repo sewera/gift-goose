@@ -1,8 +1,18 @@
-# Pocketbase, Vite, React, and Mantine template
+# Gift goose
 
-Full-stack application template using Pocketbase as backend,
-and Vite + React + Mantine combo as frontend.
+An application for assigning gift recipients between participants.
 
+Right now, you have to manually add participants using the Pocketbase admin panel.
+
+1. Add an empty desire
+2. Add a participant with already assigned desire
+
+Admin panel is at `/0000?key=8402`. Participant UIs are at `/<participant_id>`
+
+## TODO
+
+- [ ] Implement adding participants through the admin panel with automatic desire creation
+- [ ] Make admin key (8402) right now changeable
 
 ## Cheat sheet
 
@@ -16,7 +26,6 @@ and Vite + React + Mantine combo as frontend.
 - `make cp` — copies example config to a working copy and links it to ui;
 - `make cc` — cleans all working config files;
 - `make c` — clean all dist files (`ui/dist` and `./pocketbase`).
-
 
 ## Prerequisites
 
@@ -36,20 +45,18 @@ and Vite + React + Mantine combo as frontend.
     - [POSIX (Linux/macOS)](https://github.com/nvm-sh/nvm),
     - [Windows](https://github.com/coreybutler/nvm-windows).
 
-
 ## Quick start
 
 ### Workspace setup
 
 After installing prerequisites, you have to set up the workspace.
 The following commands will download a proper Node.js,
-enable it in the workspace, install [Yarn](https://yarnpkg.com/),
+enable it in the workspace,
 and download all the dependencies, both for ui and Go.
 
 ```sh
 nvm install  # if using nvm
 nvm use      # if using nvm
-npm -g i yarn
 make
 ```
 
