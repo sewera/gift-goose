@@ -61,7 +61,7 @@ export function adminUpdateAssignedReceiver(
   adminKey: string,
   participantId: string,
   assignedReceiverParticipantId: string,
-  setError: (isError: boolean) => void,
+  done: (isSuccess: boolean) => void,
 ) {
   client
     .collection('participants')
@@ -76,9 +76,9 @@ export function adminUpdateAssignedReceiver(
       },
     )
     .then(() => {
-      setError(false)
+      done(true)
     })
-    .catch(() => setError(true))
+    .catch(() => done(false))
 }
 
 function handleError(e: any) {

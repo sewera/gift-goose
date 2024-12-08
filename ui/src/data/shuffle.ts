@@ -1,12 +1,11 @@
 import { AdminParticipantData } from './datatypes'
 
-export function shuffleReceivers(participants: AdminParticipantData[]) {
+export function randomlyAssignReceivers(participants: AdminParticipantData[]) {
   for (let i = 0; i < 100; i++) {
     const target = included(participants)
     const excludedParticipants = excluded(participants)
 
-    const shuffled = shuffleArray(target)
-    const valid = assign(target, shuffled)
+    const valid = assign(target, shuffled(target))
     if (valid) {
       return [...target, ...excludedParticipants]
     }
@@ -34,7 +33,7 @@ function assign(target: AdminParticipantData[], shuffled: AdminParticipantData[]
   return true
 }
 
-function shuffleArray<T>(array: T[]): T[] {
+function shuffled<T>(array: T[]): T[] {
   const cloned = structuredClone(array)
   for (let i = cloned.length - 1; i >= 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))

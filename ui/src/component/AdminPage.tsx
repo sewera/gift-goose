@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react'
-import { adminFetchParticipants } from '../data/backendClient'
+import { useEffect, useMemo, useState } from 'react'
+import { adminFetchParticipants, adminUpdateAssignedReceiver } from '../data/backendClient'
 import { adminKeyFromURL, participantIdFromURL, participantURLFromId } from '../data/session'
 import { AdminParticipantData } from '../data/datatypes'
 import { Button, Container, Table } from '@mantine/core'
 import { translate } from '../intl/translate'
 import { LoadingPage } from './LoadingPage'
 import { ErrorPage } from './ErrorPage'
+import { included, randomlyAssignReceivers } from '../data/shuffle'
 
 export const AdminPage = () => {
   const [loading, setLoading] = useState(true)
@@ -13,19 +14,61 @@ export const AdminPage = () => {
   const [fetchError, setFetchError] = useState(false)
   const [updateError, setUpdateError] = useState(false)
 
-  useEffect(() => {
-    const adminParticipantId = participantIdFromURL()
-    const adminKey = adminKeyFromURL()
-    adminFetchParticipants(adminParticipantId!, adminKey!).then(p => {
-      setLoading(false)
-      if (p instanceof Error) {
-        setFetchError(true)
-      } else if (p) {
-        setFetchError(false)
-        setParticipants(p)
-      }
+  const adminParticipantId = useMemo(participantIdFromURL, [location.pathname])!
+  const adminKey = useMemo(adminKeyFromURL, [location.pathname])!
+
+  const fetchParticipants = () => {
+    adminFetchParticipants(adminParticipantId, adminKey)
+      .then(p => {
+        setLoading(false)
+        if (p instanceof Error) {
+          setFetchError(true)
+        } else if (p) {
+          setFetchError(false)
+          setParticipants(p)
+        }
+      })
+      .catch(() => {})
+  }
+
+  const [pendingUpdates, setPendingUpdates] = useState(0)
+  const addPendingUpdate = () => setPendingUpdates(pendingUpdates + 1)
+  const removePendingUpdate = () => setPendingUpdates(pendingUpdates - 1)
+  const pendingUpdateDone = (isSuccess: boolean) => {
+    if (isSuccess) {
+      setUpdateError(false)
+      removePendingUpdate()
+    } else {
+      setUpdateError(true)
+      removePendingUpdate()
+    }
+  }
+  const randomlyUpdateReceivers = () => {
+    const assigned = included(randomlyAssignReceivers(participants))
+    assigned.forEach(participant => {
+      addPendingUpdate()
+      adminUpdateAssignedReceiver(
+        adminParticipantId,
+        adminKey,
+        participant.id,
+        participant.assignedReceiver!,
+        pendingUpdateDone,
+      )
     })
-  }, [])
+  }
+  const clearReceivers = () => {
+    participants.forEach(participant => {
+      addPendingUpdate()
+      adminUpdateAssignedReceiver(adminParticipantId, adminKey, participant.id, '', pendingUpdateDone)
+    })
+  }
+
+  useEffect(() => {
+    if (pendingUpdates > 0) {
+      return
+    }
+    fetchParticipants()
+  }, [pendingUpdates])
 
   if (fetchError || participants.length === 0) {
     return <ErrorPage error="Could not fetch participants. Check if the key is correct" />
@@ -61,7 +104,15 @@ export const AdminPage = () => {
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>
       </Table>
-      <Button onClick={() => {}}>{translate('Shuffle receivers')}</Button>
+      <Button
+        onClick={() => {
+          randomlyUpdateReceivers()
+          fetchParticipants()
+        }}
+      >
+        {translate('Shuffle receivers')}
+      </Button>
+      <Button onClick={clearReceivers}>{translate('Clear receivers')}</Button>
     </Container>
   )
 }

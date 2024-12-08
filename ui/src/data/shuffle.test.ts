@@ -1,7 +1,7 @@
 import { AdminParticipantData } from './datatypes'
-import { shuffleReceivers } from './shuffle'
+import { randomlyAssignReceivers } from './shuffle'
 
-describe('shuffleReceivers', () => {
+describe('randomlyAssignReceivers', () => {
   const input: AdminParticipantData[] = [
     { id: '0000', name: 'First', exclude: false },
     { id: '0001', name: 'Second', exclude: false },
@@ -10,7 +10,7 @@ describe('shuffleReceivers', () => {
   ]
 
   it('shuffles receivers without excluded participants', () => {
-    const output = shuffleReceivers(input)
+    const output = randomlyAssignReceivers(input)
 
     expect(output).toHaveLength(4)
 
@@ -24,7 +24,7 @@ describe('shuffleReceivers', () => {
     expect(output[3].assignedReceiver).not.toBeDefined()
   })
   it('shuffles receivers without any participant being assigned to themselves', () => {
-    const output = shuffleReceivers(input)
+    const output = randomlyAssignReceivers(input)
 
     expect(output[0].assignedReceiver).toBeDefined()
     expect(output[0].assignedReceiver).not.toEqual(input[0].id)

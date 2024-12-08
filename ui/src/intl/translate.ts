@@ -21,6 +21,7 @@ const translations: Record<string, Record<string, string>> = {
     Excluded: 'Pominięty',
     none: 'brak',
     'Shuffle receivers': 'Przetasuj odbiorców',
+    'Clear receivers': 'Wyczyść odbiorców',
   },
 }
 
