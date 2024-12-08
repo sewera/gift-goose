@@ -57,16 +57,15 @@ func (a *App) setHostFromJSON() {
 // serveStatic serves the compiled ui files
 // from "ui/dist" on the root path ("/")
 func (a *App) serveStatic() {
-	staticServePath := "/*"
 	uiDist := "ui/dist"
-	a.OnServe().BindFunc(func(serveEvent *core.ServeEvent) error {
+	a.OnServe().BindFunc(func(se *core.ServeEvent) error {
 		if err := checkForUIDist(uiDist); err != nil {
 			log.Warn("ui/dist: " + err.Error())
-			return serveEvent.Next()
+			return se.Next()
 		}
-		log.Info("ui/dist: serving at " + staticServePath)
-		serveEvent.Router.GET(staticServePath, apis.Static(os.DirFS(uiDist), true))
-		return serveEvent.Next()
+		log.Info("ui/dist: serving at /")
+		se.Router.GET("/{path...}", apis.Static(os.DirFS(uiDist), true))
+		return se.Next()
 	})
 }
 
