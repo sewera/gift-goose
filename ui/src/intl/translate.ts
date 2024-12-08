@@ -22,6 +22,7 @@ const translations: Record<string, Record<string, string>> = {
     none: 'brak',
     'Shuffle receivers': 'Przetasuj odbiorców',
     'Clear receivers': 'Wyczyść odbiorców',
+    'There is a problem with updating receivers': 'Wystąpił problem z ustawieniem odbiorców',
   },
 }
 

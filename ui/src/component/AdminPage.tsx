@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { adminFetchParticipants, adminUpdateAssignedReceiver } from '../data/backendClient'
 import { adminKeyFromURL, participantIdFromURL, participantURLFromId } from '../data/session'
 import { AdminParticipantData } from '../data/datatypes'
-import { Button, Container, Table } from '@mantine/core'
+import { Button, Container, Table, Text } from '@mantine/core'
 import { translate } from '../intl/translate'
 import { LoadingPage } from './LoadingPage'
 import { ErrorPage } from './ErrorPage'
@@ -113,6 +113,7 @@ export const AdminPage = () => {
         {translate('Shuffle receivers')}
       </Button>
       <Button onClick={clearReceivers}>{translate('Clear receivers')}</Button>
+      {updateError && <Text>{translate('There is a problem with updating receivers')}</Text>}
     </Container>
   )
 }
