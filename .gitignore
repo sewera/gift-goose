@@ -129,6 +129,6 @@ go.work
 # Pocketbase
 /pocketbase
 /pb_data/*
-!/pb_data/data.db
+!/pb_data/data.db.example
 
 /app.config.json

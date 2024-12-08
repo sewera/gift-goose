@@ -1,38 +1,33 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
-	"log"
+	"github.com/pocketbase/pocketbase/plugins/migratecmd"
+	"github.com/sewera/gift-goose/config"
+	"github.com/sewera/gift-goose/log"
 	"os"
+	"strings"
 
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/cmd"
 	"github.com/pocketbase/pocketbase/core"
+
+	_ "github.com/sewera/gift-goose/migrations"
 )
 
 func main() {
-	setLogger()
-
 	app := NewApp()
+	isGoRun := strings.HasPrefix(os.Args[0], os.TempDir())
+	migratecmd.MustRegister(app, app.RootCmd, migratecmd.Config{
+		Automigrate: isGoRun,
+	})
+
 	app.setHostFromJSON()
 	app.serveStatic()
 	if err := app.Start(); err != nil {
 		log.Fatal(err)
 	}
-}
-
-func setLogger() {
-	log.Default().SetFlags(0)
-}
-
-func logWarn(msg string) {
-	log.Default().Println(">> warn: " + msg)
-}
-
-func logInfo(msg string) {
-	log.Default().Println(">> info: " + msg)
 }
 
 type App struct {
@@ -51,32 +46,12 @@ func (a *App) setHostFromJSON() {
 	serve := cmd.NewServeCommand(a, true)
 	serve.Use = "serve-from-config"
 	serve.Short = "Starts the web server from JSON config"
-	serve.PersistentFlags().Set("http", getHostFromJSONOrReturnDefault())
+	err := serve.PersistentFlags().Set("http", config.GetHostFromJSONOrReturnDefault().Host)
+	if err != nil {
+		log.Error("failed to set host")
+		return
+	}
 	a.RootCmd.AddCommand(serve)
-}
-
-func getHostFromJSONOrReturnDefault() string {
-	file := "app.config.json"
-
-	warnAndReturnDefault := func() string {
-		defaultHost := "localhost:8090"
-		logWarn("cannot read " + file + ", falling back to default host: " + defaultHost + ".")
-		return defaultHost
-	}
-
-	data, err := os.ReadFile(file)
-	if err != nil {
-		return warnAndReturnDefault()
-	}
-
-	var config *struct {
-		PBHost string `json:"pbHost"`
-	}
-	err = json.Unmarshal(data, &config)
-	if err != nil {
-		return warnAndReturnDefault()
-	}
-	return config.PBHost
 }
 
 // serveStatic serves the compiled ui files
@@ -86,10 +61,10 @@ func (a *App) serveStatic() {
 	uiDist := "ui/dist"
 	a.OnServe().BindFunc(func(serveEvent *core.ServeEvent) error {
 		if err := checkForUIDist(uiDist); err != nil {
-			logWarn("ui/dist: " + err.Error())
+			log.Warn("ui/dist: " + err.Error())
 			return serveEvent.Next()
 		}
-		logInfo("ui/dist: serving at " + staticServePath)
+		log.Info("ui/dist: serving at " + staticServePath)
 		serveEvent.Router.GET(staticServePath, apis.Static(os.DirFS(uiDist), true))
 		return serveEvent.Next()
 	})

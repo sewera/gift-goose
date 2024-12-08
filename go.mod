@@ -1,4 +1,4 @@
-module github.com/blazejsewera/pocketbase-mantine-template
+module github.com/sewera/gift-goose
 
 go 1.23
 
