@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { adminFetchParticipants, adminUpdateAssignedReceiver } from '../data/backendClient'
 import { adminKeyFromURL, participantIdFromURL, participantURLFromId } from '../data/session'
 import { AdminParticipantData } from '../data/datatypes'
-import { Button, Container, Table, Text } from '@mantine/core'
+import { Button, Container, Group, Table, Text } from '@mantine/core'
 import { translate } from '../intl/translate'
 import { LoadingPage } from './LoadingPage'
 import { ErrorPage } from './ErrorPage'
@@ -102,7 +102,7 @@ export const AdminPage = () => {
   ))
 
   return (
-    <Container size="lg">
+    <Container size="lg" mt="lg">
       <Table>
         <Table.Thead>
           <Table.Tr>
@@ -111,7 +111,7 @@ export const AdminPage = () => {
             <Table.Td>{translate('Desire ID (Gift ID)')}</Table.Td>
             <Table.Td>
               {translate('Assigned receiver')}
-              <Button size="compact-xs" onClick={toggleHidden}>
+              <Button size="compact-xs" onClick={toggleHidden} ml="sm">
                 {hidden ? translate('show') : translate('hide')}
               </Button>
             </Table.Td>
@@ -120,15 +120,19 @@ export const AdminPage = () => {
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>
       </Table>
-      <Button
-        onClick={() => {
-          randomlyUpdateReceivers()
-          fetchParticipants()
-        }}
-      >
-        {translate('Shuffle receivers')}
-      </Button>
-      <Button onClick={clearReceivers}>{translate('Clear receivers')}</Button>
+      <Group mt="md">
+        <Button
+          onClick={() => {
+            randomlyUpdateReceivers()
+            fetchParticipants()
+          }}
+        >
+          {translate('Shuffle receivers')}
+        </Button>
+        <Button onClick={clearReceivers} variant="subtle">
+          {translate('Clear receivers')}
+        </Button>
+      </Group>
       {updateError && <Text>{translate('There is a problem with updating receivers')}</Text>}
     </Container>
   )
