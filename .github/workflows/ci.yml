@@ -46,3 +46,13 @@ jobs:
 
       - name: Test
         run: make -j4 test
+
+      - name: Archive
+        run: make archive
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: "gift-goose-dist-archive"
+          path: |
+            ../gift-goose-dist.tar
