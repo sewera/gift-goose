@@ -97,4 +97,4 @@ test-update:
 	@cd ui; npm run test:update
 
 archive: copy-example-config build
-	tar -cvf ../gift-goose-dist.tar ./
+	tar -cvf --exclude="ui/node_modules" --exclude="gift-goose-dist.tar" gift-goose-dist.tar ./
