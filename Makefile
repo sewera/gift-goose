@@ -97,4 +97,4 @@ test-update:
 	@cd ui; npm run test:update
 
 archive: copy-example-config build
-	tar -cvf ./dist.tar $(PB_EXE) $(UI)/$(DIST) $(CFG) # TODO
+	tar -cvf ../gift-goose-dist.tar ./
