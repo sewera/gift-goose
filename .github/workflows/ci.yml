@@ -55,4 +55,4 @@ jobs:
         with:
           name: "gift-goose-dist-archive"
           path: |
-            ../gift-goose-dist.tar
+            gift-goose-dist.tar
