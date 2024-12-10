@@ -1,8 +1,8 @@
 import Pocketbase, { ClientResponseError } from 'pocketbase'
-import { BACKEND_URL } from '../config'
+import { BACKEND_HOST } from '../config'
 import { AdminParticipantData, Participant, ParticipantData } from './datatypes'
 
-const client = new Pocketbase(BACKEND_URL)
+const client = new Pocketbase(BACKEND_HOST)
 
 export async function fetchParticipant(participantId: string) {
   try {

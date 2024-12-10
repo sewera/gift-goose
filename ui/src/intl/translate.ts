@@ -12,6 +12,7 @@ const translations: Record<string, Record<string, string>> = {
       'Wystąpił problem z ustawieniem preferencji prezentu. Spróbuj ponownie',
     'Prepare the following gift:': 'Przygotuj na prezent:',
     'Put the following ID on the gift:': 'Umieść na prezencie następujące oznaczenie:',
+    'Assigned receiver': 'Przydzielony odbiorca',
     'No assigned receiver': 'Nie przydzielono odbiorcy',
     'Could not fetch participants. Check if the key is correct':
       'Błąd przy pobieraniu listy uczestników. Sprawdź czy klucz (key) jest poprawny',

@@ -1,4 +1,4 @@
-import { ADMIN_PARTICIPANT_ID } from '../config'
+import { ADMIN_PARTICIPANT_ID, BASE_APP_URL } from '../config'
 
 const participantIdRegex = new RegExp('([0-9]{4})')
 
@@ -17,10 +17,5 @@ export function isAdmin() {
 }
 
 export function participantURLFromId(participantId: string) {
-  const url = URL.parse(location.origin)
-  if (!url) {
-    return null
-  }
-  url.pathname = participantId
-  return url.toString()
+  return BASE_APP_URL.endsWith('/') ? `${BASE_APP_URL}${participantId}` : `${BASE_APP_URL}/${participantId}`
 }

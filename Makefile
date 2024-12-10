@@ -7,9 +7,6 @@ UI=ui
 UI_STATIC=public
 DIST=dist
 
-BACKEND_CONFIG=app.config.json
-EXAMPLE_BACKEND_CONFIG=app.config.example.json
-
 FRONTEND_CONFIG_FILENAME=app.config.js
 FRONTEND_CONFIG=$(UI)/$(UI_STATIC)/$(FRONTEND_CONFIG_FILENAME)
 EXAMPLE_FRONTEND_CONFIG_FILENAME=app.config.example.js
@@ -57,10 +54,7 @@ deps-go:
 	@go mod download
 	@echo "> deps for go installed"
 
-copy-example-config: $(BACKEND_CONFIG) $(FRONTEND_CONFIG)
-
-$(BACKEND_CONFIG):
-	@cp $(EXAMPLE_BACKEND_CONFIG) $(BACKEND_CONFIG)
+copy-example-config: $(FRONTEND_CONFIG)
 
 $(FRONTEND_CONFIG):
 	@cp $(EXAMPLE_FRONTEND_CONFIG) $(FRONTEND_CONFIG)
@@ -72,14 +66,14 @@ dev: pb vite # remember to start with -j2 (`make -j2 dev`)
 
 pb: $(PB_EXE)
 	@echo "> starting $(PB_EXE)"
-	@./$(PB_EXE) serve-from-config
+	@./$(PB_EXE) serve
 
 vite: $(FRONTEND_CONFIG)
 	@echo "> starting Vite in dev mode"
 	@cd ui; npm run dev
 
 clean-config:
-	@rm -f $(BACKEND_CONFIG) $(FRONTEND_CONFIG)
+	@rm -f $(FRONTEND_CONFIG)
 
 clean:
 	@rm -f $(PB_EXE)

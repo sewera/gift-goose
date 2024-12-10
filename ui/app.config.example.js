@@ -1,4 +1,5 @@
 var appConfig = {
-  pbHost: 'http://localhost:8090',
+  backendHost: 'http://localhost:8090',
+  baseAppUrl: 'http://localhost:3000',
   lang: 'en',
 }
