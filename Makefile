@@ -47,7 +47,7 @@ endif
 deps: deps-ui deps-go
 
 deps-ui:
-	@cd ui; npm install
+	@cd $(UI); npm install
 	@echo "> deps for ui installed"
 
 deps-go:
@@ -70,7 +70,7 @@ pb: $(PB_EXE)
 
 vite: $(FRONTEND_CONFIG)
 	@echo "> starting Vite in dev mode"
-	@cd ui; npm run dev
+	@cd $(UI); npm run dev
 
 clean-config:
 	@rm -f $(FRONTEND_CONFIG)
@@ -89,18 +89,18 @@ $(PB_EXE): $(PB_SRC)
 	@echo "> $(PB_EXE) built"
 
 ui-build: $(FRONTEND_CONFIG)
-	@cd ui; npm run build
+	@cd $(UI); npm run build
 	@echo "> $(UI)/$(DIST) built"
 
 ui-build-with-gift-prefix: $(FRONTEND_CONFIG)
-	@cd ui; npm run buildWithGiftPrefix
+	@cd $(UI); npm run buildWithGiftPrefix
 	@echo "> $(UI)/$(DIST) built with gift prefix"
 
 test:
-	@cd ui; npm run test
+	@cd $(UI); npm run test
 
 test-update:
-	@cd ui; npm run test:update
+	@cd $(UI); npm run test:update
 
 archive: copy-example-config build
-	tar --exclude="ui/node_modules" --exclude="gift-goose-dist.tar" --exclude=".git" -cvf gift-goose-dist.tar ./
+	tar -cvf gift-goose-dist.tar $(PB_EXE) $(UI)/$(DIST)
