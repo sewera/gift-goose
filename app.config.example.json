@@ -1,5 +1,3 @@
 {
-  "$schema": "app.config.schema.json",
-  "pbHost": "http://localhost:8090",
-  "language": "en"
+  "pbHost": "http://localhost:8090"
 }

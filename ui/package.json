@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "buildWithGiftPrefix": "tsc && vite build --base=/gift",
     "test": "jest",
     "test:update": "jest -u",
     "preview": "vite preview"

@@ -33,4 +33,4 @@ dist-ssr
 
 .jest-test-results.json
 
-/app.config.json
+public/app.config.js

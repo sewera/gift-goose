@@ -31,7 +31,7 @@ jobs:
         run: make deps-go
 
       - name: Build
-        run: make -j4 build
+        run: make -j4 build-with-gift-prefix
 
       - name: Test
         run: make -j4 test

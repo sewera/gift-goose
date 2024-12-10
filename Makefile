@@ -4,10 +4,16 @@ PB_SRC=pocketbase.go
 PB_EXE=pocketbase
 
 UI=ui
+UI_STATIC=public
 DIST=dist
 
-CFG=app.config.json
-CFG_EXAMPLE=app.config.example.json
+BACKEND_CONFIG=app.config.json
+EXAMPLE_BACKEND_CONFIG=app.config.example.json
+
+FRONTEND_CONFIG_FILENAME=app.config.js
+FRONTEND_CONFIG=$(UI)/$(UI_STATIC)/$(FRONTEND_CONFIG_FILENAME)
+EXAMPLE_FRONTEND_CONFIG_FILENAME=app.config.example.js
+EXAMPLE_FRONTEND_CONFIG=$(UI)/$(EXAMPLE_FRONTEND_CONFIG_FILENAME)
 
 .DEFAULT_GOAL := workspace
 .PHONY: workspace print-help-ui print-help-go deps copy-example-config start dev pb vite clean-config clean build ui-build test test-update cp s d v cc c b t tu
@@ -51,13 +57,13 @@ deps-go:
 	@go mod download
 	@echo "> deps for go installed"
 
-copy-example-config: $(CFG) $(UI)/$(CFG)
+copy-example-config: $(BACKEND_CONFIG) $(FRONTEND_CONFIG)
 
-$(CFG):
-	@cp $(CFG_EXAMPLE) $(CFG)
+$(BACKEND_CONFIG):
+	@cp $(EXAMPLE_BACKEND_CONFIG) $(BACKEND_CONFIG)
 
-$(UI)/$(CFG): $(CFG)
-	@cd $(UI); ln -s ../$(CFG) ./$(CFG)
+$(FRONTEND_CONFIG):
+	@cp $(EXAMPLE_FRONTEND_CONFIG) $(FRONTEND_CONFIG)
 
 start: build
 	@$(MAKE) pb
@@ -68,12 +74,12 @@ pb: $(PB_EXE)
 	@echo "> starting $(PB_EXE)"
 	@./$(PB_EXE) serve-from-config
 
-vite: $(UI)/$(CFG)
+vite: $(FRONTEND_CONFIG)
 	@echo "> starting Vite in dev mode"
 	@cd ui; npm run dev
 
 clean-config:
-	@rm -f $(CFG) $(UI)/$(CFG)
+	@rm -f $(BACKEND_CONFIG) $(FRONTEND_CONFIG)
 
 clean:
 	@rm -f $(PB_EXE)
@@ -82,13 +88,19 @@ clean:
 
 build: ui-build $(PB_EXE)
 
+build-with-gift-prefix: ui-build-with-gift-prefix $(PB_EXE)
+
 $(PB_EXE): $(PB_SRC)
 	@go build -o $(PB_EXE) $(PB_SRC)
 	@echo "> $(PB_EXE) built"
 
-ui-build: $(UI)/$(CFG)
+ui-build: $(FRONTEND_CONFIG)
 	@cd ui; npm run build
 	@echo "> $(UI)/$(DIST) built"
+
+ui-build-with-gift-prefix: $(FRONTEND_CONFIG)
+	@cd ui; npm run buildWithGiftPrefix
+	@echo "> $(UI)/$(DIST) built with gift prefix"
 
 test:
 	@cd ui; npm run test

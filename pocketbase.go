@@ -3,14 +3,12 @@ package main
 import (
 	"errors"
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
-	"github.com/sewera/gift-goose/config"
 	"github.com/sewera/gift-goose/log"
 	"os"
 	"strings"
 
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
-	"github.com/pocketbase/pocketbase/cmd"
 	"github.com/pocketbase/pocketbase/core"
 
 	_ "github.com/sewera/gift-goose/migrations"
@@ -23,7 +21,6 @@ func main() {
 		Automigrate: isGoRun,
 	})
 
-	app.setHostFromJSON()
 	app.serveStatic()
 	if err := app.Start(); err != nil {
 		log.Fatal(err)
@@ -38,20 +35,6 @@ func NewApp() *App {
 	return &App{
 		PocketBase: pocketbase.New(),
 	}
-}
-
-// setHostFromJSON is equivalent to running
-// standard PocketBase with "--http=<host>" flag
-func (a *App) setHostFromJSON() {
-	serve := cmd.NewServeCommand(a, true)
-	serve.Use = "serve-from-config"
-	serve.Short = "Starts the web server from JSON config"
-	err := serve.PersistentFlags().Set("http", config.GetHostFromJSONOrReturnDefault().Host)
-	if err != nil {
-		log.Error("failed to set host")
-		return
-	}
-	a.RootCmd.AddCommand(serve)
 }
 
 // serveStatic serves the compiled ui files
