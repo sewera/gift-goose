@@ -39,7 +39,10 @@ export const AdminPage = () => {
   const addNewParticipant = (newParticipantName: string) =>
     adminAddNewParticipant(adminParticipantId, adminKey, newParticipantName, isSuccess => {
       setAddParticipantError(!isSuccess)
-      fetchParticipants()
+      if (isSuccess) {
+        setNewParticipantName('')
+        fetchParticipants()
+      }
     })
 
   const [pendingUpdates, setPendingUpdates] = useState(0)

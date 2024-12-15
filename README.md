@@ -133,13 +133,6 @@ make clean
 
 or `make c` for short.
 
-### Credentials
-
-| Field | Value               |
-| ----- | ------------------- |
-| Email | `admin@sewera.dev`  |
-| Pass  | `panda-blog-scorer` |
-
 ### Default URLs
 
 - Vite DEV server: <http://localhost:3000/>
@@ -151,6 +144,13 @@ The Pocketbase URL can be configured in `app.config.json`.
 Both backend and frontend will respect this configuration.
 See also `make copy-example-config` recipe.
 
+## Screenshots
+
+![Empty Admin Page](./screenshots/empty_admin_page.png)
+![Admin Page with participants](./screenshots/admin_page_with_participants.png)
+![Participant Page without set desire](./screenshots/participant_page_without_set_desire.png)
+![Participant Page with set desire](./screenshots/participant_page_with_set_desire.png)
+![Participant Page with Recipient](./screenshots/participant_page_with_recipient.png)
 
 ## Further reading
 
