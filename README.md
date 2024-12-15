@@ -9,8 +9,7 @@ Participant UIs are at `/<participant_id>`.
 
 ## TODO
 
-- [ ] Implement adding participants through the admin panel with automatic desire creation
-- [ ] Make admin key (8402) right now changeable
+- [ ] Make admin key changeable (8402 right now)
 
 ## Cheat sheet
 
