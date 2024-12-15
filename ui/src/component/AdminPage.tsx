@@ -96,6 +96,7 @@ export const AdminPage = () => {
       </Table.Td>
       <Table.Td>{participant.name}</Table.Td>
       <Table.Td>{participant.desire}</Table.Td>
+      <Table.Td>{participant.isDesireSet ? '✓' : '✕'}</Table.Td>
       <Table.Td>{displayAssignedReceiver(participant.assignedReceiver)}</Table.Td>
       <Table.Td>{participant.exclude ? '✓' : '✕'}</Table.Td>
     </Table.Tr>
@@ -109,6 +110,7 @@ export const AdminPage = () => {
             <Table.Td>{translate('ID')}</Table.Td>
             <Table.Td>{translate('Name')}</Table.Td>
             <Table.Td>{translate('Desire ID (Gift ID)')}</Table.Td>
+            <Table.Td>{translate('Desire set')}</Table.Td>
             <Table.Td>
               {translate('Assigned receiver')}
               <Button size="compact-xs" onClick={toggleHidden} ml="sm">

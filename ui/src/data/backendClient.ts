@@ -45,12 +45,18 @@ export function updateWants(participant: Participant, wants: string, setError: (
 
 export async function adminFetchParticipants(adminParticipantId: string, adminKey: string) {
   try {
-    return client.collection('participants').getFullList<AdminParticipantData>({
+    const adminParticipantData = await client.collection('participants').getFullList<AdminParticipantData>({
+      expand: 'desire',
       headers: {
         'X-Participant-Id': adminParticipantId,
         'X-Admin-Key': adminKey,
       },
     })
+
+    return adminParticipantData.map((participant: AdminParticipantData) => ({
+      ...participant,
+      isDesireSet: !!participant.expand.desire?.wants,
+    }))
   } catch (e) {
     return handleError(e)
   }

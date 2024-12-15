@@ -31,6 +31,7 @@ const translations: Record<string, Record<string, string>> = {
     'The receiver did not set their desired gift': 'Odbiorca nie ustawił preferencji prezentu',
     'Your gift preference:': 'Twoja preferencja prezentu:',
     'Your mysterious gift receiver': 'Twój tajemniczy odbiorca prezentu',
+    'Desire set': 'Preferencja ustawiona',
   },
 }
 

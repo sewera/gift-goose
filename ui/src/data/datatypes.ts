@@ -31,5 +31,9 @@ export type AdminParticipantData = {
   name: string
   assignedReceiver?: string
   desire?: string
+  expand: {
+    desire?: DesireData
+  }
+  isDesireSet?: boolean
   exclude: boolean
 }
