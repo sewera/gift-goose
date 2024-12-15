@@ -2,12 +2,10 @@
 
 An application for assigning gift recipients between participants.
 
-Right now, you have to manually add participants using the Pocketbase admin panel.
-
-1. Add an empty desire
-2. Add a participant with already assigned desire
-
-Admin panel is at `/0000?key=8402`. Participant UIs are at `/<participant_id>`
+You can add participants, check the desire IDs, and shuffle recipients between participants
+in the Admin Panel, which is at `/0000?key=8402`.
+The key is hard-coded for now.
+Participant UIs are at `/<participant_id>`.
 
 ## TODO
 
