@@ -1,4 +1,4 @@
-type DesireData = {
+export type DesireData = {
   id: string
   wants: string
 }

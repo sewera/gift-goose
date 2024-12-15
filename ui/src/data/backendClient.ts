@@ -1,6 +1,6 @@
 import Pocketbase, { ClientResponseError } from 'pocketbase'
 import { BACKEND_HOST } from '../config'
-import { AdminParticipantData, Participant, ParticipantData } from './datatypes'
+import { AdminParticipantData, DesireData, Participant, ParticipantData } from './datatypes'
 
 const client = new Pocketbase(BACKEND_HOST)
 
@@ -83,6 +83,43 @@ export function adminUpdateAssignedReceiver(
     )
     .then(() => {
       done(true)
+    })
+    .catch(() => done(false))
+}
+
+export function adminAddNewParticipant(
+  adminParticipantId: string,
+  adminKey: string,
+  newParticipantName: string,
+  done: (isSuccess: boolean) => void,
+) {
+  client
+    .collection('desires')
+    .create<DesireData>(
+      {},
+      {
+        headers: {
+          'X-Participant-Id': adminParticipantId,
+          'X-Admin-Key': adminKey,
+        },
+      },
+    )
+    .then(desireData => {
+      client
+        .collection('participants')
+        .create<AdminParticipantData>(
+          { name: newParticipantName, desire: desireData.id },
+          {
+            headers: {
+              'X-Participant-Id': adminParticipantId,
+              'X-Admin-Key': adminKey,
+            },
+          },
+        )
+        .then(() => {
+          done(true)
+        })
+        .catch(() => done(false))
     })
     .catch(() => done(false))
 }

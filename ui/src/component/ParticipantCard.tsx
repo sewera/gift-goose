@@ -46,10 +46,7 @@ export const ParticipantCard: FC<ParticipantCardProps> = ({ participant }) => {
 
       <Text mb="sm">{translate('Your gift preference:')}</Text>
       {editMode ? (
-        <TextInput
-          value={participantWants}
-          onChange={event => setParticipantWants(event.currentTarget.value)}
-        ></TextInput>
+        <TextInput value={participantWants} onChange={event => setParticipantWants(event.currentTarget.value)} />
       ) : (
         <Text fw="bold">{(participantWants ?? participant.wants) || translate('none')}</Text>
       )}

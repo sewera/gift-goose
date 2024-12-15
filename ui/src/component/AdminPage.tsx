@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
-import { adminFetchParticipants, adminUpdateAssignedReceiver } from '../data/backendClient'
+import { adminAddNewParticipant, adminFetchParticipants, adminUpdateAssignedReceiver } from '../data/backendClient'
 import { adminKeyFromURL, participantIdFromURL, participantURLFromId } from '../data/session'
 import { AdminParticipantData } from '../data/datatypes'
-import { Button, Container, Group, Table, Text } from '@mantine/core'
+import { Button, Container, Divider, Group, Table, Text, TextInput } from '@mantine/core'
 import { translate } from '../intl/translate'
 import { LoadingPage } from './LoadingPage'
 import { ErrorPage } from './ErrorPage'
@@ -14,8 +14,10 @@ export const AdminPage = () => {
   const [participants, setParticipants] = useState<AdminParticipantData[]>([])
   const [fetchError, setFetchError] = useState(false)
   const [updateError, setUpdateError] = useState(false)
+  const [addParticipantError, setAddParticipantError] = useState(false)
   const [hidden, setHidden] = useState(true)
   const toggleHidden = () => setHidden(!hidden)
+  const [newParticipantName, setNewParticipantName] = useState('')
 
   const adminParticipantId = useMemo(participantIdFromURL, [location.pathname])!
   const adminKey = useMemo(adminKeyFromURL, [location.pathname])!
@@ -33,6 +35,12 @@ export const AdminPage = () => {
       })
       .catch(() => {})
   }
+
+  const addNewParticipant = (newParticipantName: string) =>
+    adminAddNewParticipant(adminParticipantId, adminKey, newParticipantName, isSuccess => {
+      setAddParticipantError(!isSuccess)
+      fetchParticipants()
+    })
 
   const [pendingUpdates, setPendingUpdates] = useState(0)
   const addPendingUpdate = () => setPendingUpdates(pendingUpdates + 1)
@@ -105,8 +113,8 @@ export const AdminPage = () => {
       </Table.Tr>
     ))
 
-  return (
-    <Container size="lg" mt="lg">
+  const table =
+    rows.length !== 0 ? (
       <Table>
         <Table.Thead>
           <Table.Tr>
@@ -125,6 +133,13 @@ export const AdminPage = () => {
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>
       </Table>
+    ) : (
+      <Text>{translate('No participants')}</Text>
+    )
+
+  return (
+    <Container size="lg" mt="lg">
+      {table}
       <Group mt="md">
         <Button
           onClick={() => {
@@ -138,7 +153,19 @@ export const AdminPage = () => {
           {translate('Clear receivers')}
         </Button>
       </Group>
+      <Divider mt="md" />
+      <Group mt="md">
+        <TextInput value={newParticipantName} onChange={event => setNewParticipantName(event.currentTarget.value)} />
+        <Button
+          onClick={() => {
+            newParticipantName ? addNewParticipant(newParticipantName) : setAddParticipantError(true)
+          }}
+        >
+          {translate('Add participant')}
+        </Button>
+      </Group>
       {updateError && <Text>{translate('There is a problem with updating receivers')}</Text>}
+      {addParticipantError && <Text>{translate('There is a problem with adding participant')}</Text>}
     </Container>
   )
 }

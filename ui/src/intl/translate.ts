@@ -24,6 +24,7 @@ const translations: Record<string, Record<string, string>> = {
     'Shuffle receivers': 'Przetasuj odbiorców',
     'Clear receivers': 'Wyczyść odbiorców',
     'There is a problem with updating receivers': 'Wystąpił problem z ustawieniem odbiorców',
+    'There is a problem with adding participant': 'Wystąpił problem z dodawaniem uczestnika',
     show: 'pokaż',
     hide: 'ukryj',
     hidden: 'ukryty',
@@ -32,6 +33,8 @@ const translations: Record<string, Record<string, string>> = {
     'Your gift preference:': 'Twoja preferencja prezentu:',
     'Your mysterious gift receiver': 'Twój tajemniczy odbiorca prezentu',
     'Desire set': 'Preferencja ustawiona',
+    'No participants': 'Brak uczestników',
+    'Add participant': 'Dodaj uczestnika',
   },
 }
 

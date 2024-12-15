@@ -13,6 +13,7 @@ func init() {
 		desiresCollection, _ := app.FindCollectionByNameOrId("desires")
 		if desiresCollection == nil {
 			desiresCollection = core.NewBaseCollection("desires")
+			desiresCollection.CreateRule = types.Pointer(`@request.headers.x_participant_id = "0000" && @request.headers.x_admin_key = "8402"`)
 			desiresCollection.ViewRule = types.Pointer("")
 			desiresCollection.UpdateRule = types.Pointer("@request.headers.x_participant_id = participants_via_desire.id")
 			id := desiresCollection.Fields.GetByName("id").(*core.TextField)
@@ -34,6 +35,7 @@ func init() {
 		participantsCollection, _ := app.FindCollectionByNameOrId("participants")
 		if participantsCollection == nil {
 			participantsCollection = core.NewBaseCollection("participants")
+			participantsCollection.CreateRule = types.Pointer(`@request.headers.x_participant_id = "0000" && @request.headers.x_admin_key = "8402"`)
 			participantsCollection.ListRule = types.Pointer(`@request.headers.x_participant_id = "0000" && @request.headers.x_admin_key = "8402"`)
 			participantsCollection.ViewRule = types.Pointer("")
 			participantsCollection.UpdateRule = types.Pointer(`@request.headers.x_participant_id = "0000" && @request.headers.x_admin_key = "8402"`)
@@ -45,7 +47,8 @@ func init() {
 			id.Max = 4
 
 			participantsCollection.Fields.Add(&core.TextField{
-				Name: "name",
+				Name:     "name",
+				Required: true,
 			})
 
 			participantsCollection.Fields.Add(&core.RelationField{
