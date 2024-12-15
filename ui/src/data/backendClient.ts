@@ -1,6 +1,12 @@
 import Pocketbase, { ClientResponseError } from 'pocketbase'
 import { BACKEND_HOST } from '../config'
-import { AdminParticipantData, DesireData, Participant, ParticipantData } from './datatypes'
+import {
+  AdminParticipantData,
+  AdminParticipantDataExpanded,
+  DesireData,
+  Participant,
+  ParticipantData,
+} from './datatypes'
 
 const client = new Pocketbase(BACKEND_HOST)
 
@@ -45,7 +51,7 @@ export function updateWants(participant: Participant, wants: string, setError: (
 
 export async function adminFetchParticipants(adminParticipantId: string, adminKey: string) {
   try {
-    const adminParticipantData = await client.collection('participants').getFullList<AdminParticipantData>({
+    const adminParticipantData = await client.collection('participants').getFullList<AdminParticipantDataExpanded>({
       expand: 'desire',
       headers: {
         'X-Participant-Id': adminParticipantId,
@@ -53,7 +59,7 @@ export async function adminFetchParticipants(adminParticipantId: string, adminKe
       },
     })
 
-    return adminParticipantData.map((participant: AdminParticipantData) => ({
+    return adminParticipantData.map(participant => ({
       ...participant,
       isDesireSet: !!participant.expand.desire?.wants,
     }))
