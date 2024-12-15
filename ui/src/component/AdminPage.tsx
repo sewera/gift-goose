@@ -7,6 +7,7 @@ import { translate } from '../intl/translate'
 import { LoadingPage } from './LoadingPage'
 import { ErrorPage } from './ErrorPage'
 import { included, randomlyAssignReceivers } from '../data/shuffle'
+import { ADMIN_PARTICIPANT_ID } from '../config'
 
 export const AdminPage = () => {
   const [loading, setLoading] = useState(true)
@@ -89,18 +90,20 @@ export const AdminPage = () => {
     }
   }
 
-  const rows = participants.map(participant => (
-    <Table.Tr key={participant.id}>
-      <Table.Td>
-        <a href={participantURLFromId(participant.id) ?? ''}>{participant.id}</a>
-      </Table.Td>
-      <Table.Td>{participant.name}</Table.Td>
-      <Table.Td>{participant.desire}</Table.Td>
-      <Table.Td>{participant.isDesireSet ? '✓' : '✕'}</Table.Td>
-      <Table.Td>{displayAssignedReceiver(participant.assignedReceiver)}</Table.Td>
-      <Table.Td>{participant.exclude ? '✓' : '✕'}</Table.Td>
-    </Table.Tr>
-  ))
+  const rows = participants
+    .filter(participant => participant.id != ADMIN_PARTICIPANT_ID)
+    .map(participant => (
+      <Table.Tr key={participant.id}>
+        <Table.Td>
+          <a href={participantURLFromId(participant.id) ?? ''}>{participant.id}</a>
+        </Table.Td>
+        <Table.Td>{participant.name}</Table.Td>
+        <Table.Td>{participant.desire}</Table.Td>
+        <Table.Td>{participant.isDesireSet ? '✓' : '✕'}</Table.Td>
+        <Table.Td>{displayAssignedReceiver(participant.assignedReceiver)}</Table.Td>
+        <Table.Td>{participant.exclude ? '✓' : '✕'}</Table.Td>
+      </Table.Tr>
+    ))
 
   return (
     <Container size="lg" mt="lg">
